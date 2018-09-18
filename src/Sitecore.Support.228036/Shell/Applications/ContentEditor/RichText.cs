@@ -212,12 +212,7 @@
           {
             text = string.Empty;
           }
-          // Begin fix for bug 228036
-          if (text.Equals("&nbsp;"))
-          {
-            text = string.Empty;
-          }
-          // End fix for bug 228036
+          
           urlHandle["html"] = text;
           urlHandle.Add(urlString);
           SheerResponse.ShowModalDialog(new ModalDialogOptions(urlString.ToString())
@@ -314,10 +309,21 @@
     protected override bool LoadPostData(string value)
     {
       Assert.ArgumentNotNull(value, "value");
+      
       if (value != Value)
       {
-        Value = value;
-        return true;
+        //Begin fix for Bug 228036
+        if (value.Equals("&nbsp;"))
+        {
+          Value = String.Empty;
+          return true;
+        }
+        //end fix for Bug 228036
+        else
+        {
+          Value = value;
+          return true;
+        }
       }
       return false;
     }
